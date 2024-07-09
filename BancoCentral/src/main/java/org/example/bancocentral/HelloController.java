@@ -164,4 +164,123 @@ public class HelloController {
             System.out.println("Error al conectar la base de datos"); // 00218123 Imprime un mensaje de error si la conexión falla
         }
     }
+
+    @FXML
+    public void cargarReporteB() { // 00363523 Metodo para cargar el Reporte B
+        reporteTextArea.clear(); // 00363523 Limpia el área de texto del reporte
+        File directory = new File("Reportes"); // 00363523 Crea un objeto File para la carpeta "Reportes"
+        if (!directory.exists()) { // 00363523 Verifica si la carpeta no existe
+            directory.mkdir(); // 00363523 Crea la carpeta "Reportes"
+        }
+
+        String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm").format(new Date()); // 00363523 Obtiene la fecha y hora actual en el formato deseado
+        String filepath = "Reportes/ReporteB_" + timestamp + ".txt"; // 00363523 Genera el nombre del archivo del reporte
+        String query = "SELECT SUM(c.monto) AS total_gastado " +
+                "FROM Compra c " +
+                "JOIN Tarjeta t ON c.tarjeta_id = t.id " +
+                "JOIN Cliente cl ON t.cliente_id = cl.id " +
+                "WHERE cl.id = 1 AND MONTH(c.fecha) = 01 AND YEAR(c.fecha) = 2024"; // 00363523 Consulta SQL para obtener el total gastado por el cliente 1 en enero de 2024
+
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BancoCentral", "root", "#Juanbermudezp"); // 00363523 Conexión a la base de datos
+             BufferedWriter writer = new BufferedWriter(new FileWriter(filepath))) { // 00363523 Crea un BufferedWriter para escribir en el archivo
+
+            writer.write("Consulta SQL: " + query); // 00363523 Escribe la consulta SQL en el archivo
+            writer.newLine(); // 00363523 Escribe una nueva línea en el archivo
+            writer.newLine(); // 00363523 Escribe una nueva línea en el archivo
+
+            Statement st = conn.createStatement(); // 00363523 Crea una declaración SQL
+            ResultSet rs = st.executeQuery(query); // 00363523 Ejecuta la consulta SQL y obtiene el resultado
+
+            StringBuilder reporteBuilder = new StringBuilder(); // 00363523 StringBuilder para construir el contenido del reporte
+
+            if (rs.next()) { // 00363523 Verifica si hay un resultado
+                double totalGastado = rs.getDouble("total_gastado"); // 00363523 Obtiene el total gastado
+                String linea = String.format("Total gastado por el cliente 1 en el mes 1/2024: %.2f", totalGastado); // 00363523 Formatea los datos en una línea
+                writer.write(linea); // 00363523 Escribe la línea en el archivo
+                writer.newLine(); // 00363523 Escribe una nueva línea en el archivo
+                reporteBuilder.append(linea).append("\n"); // 00363523 Añade la línea al StringBuilder
+            }
+
+            writer.close(); // Cierra el BufferedWriter
+            reporteTextArea.setText(reporteBuilder.toString()); // 00363523 Muestra el contenido del reporte en el área de texto
+
+        } catch (SQLException e) {
+            System.out.println("Fallo al conectar la base de datos"); // 00363523 Imprime un mensaje de error si la conexión falla
+            e.printStackTrace(); // Imprime la traza del error
+        } catch (IOException e) {
+            System.out.println("Error al escribir en el archivo"); // 00363523 Imprime un mensaje de error si la escritura en el archivo falla
+            e.printStackTrace(); // Imprime la traza del error
+        }
+    }
+
+    @FXML
+    public void cargarReporteC() { // 00218123 Metodo para cargar el reporte C
+        reporteTextArea.clear(); // 00218123 Limpia el área de texto del reporte
+        File directory = new File("Reportes"); // 00218123 Crea un objeto File para la carpeta "Reportes"
+        if (!directory.exists()) { // 00218123 Verifica si la carpeta no existe
+            directory.mkdir(); // 00218123 Crea la carpeta "Reportes"
+        }
+
+        String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm").format(new Date()); // 00218123 Obtiene la fecha y hora actual en el formato deseado
+        String filepath = "Reportes/ReporteC_" + timestamp + ".txt"; // 00218123 Genera el nombre del archivo del reporte
+        String query = "SELECT t.numero_tarjeta, t.tipo " +
+                "FROM Tarjeta t " +
+                "JOIN Cliente cl ON t.cliente_id = cl.id " +
+                "WHERE cl.id = 1"; // Consulta SQL para obtener las tarjetas del cliente 1
+
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BancoCentral", "root", "#Juanbermudezp"); // 00218123 Conexión a la base de datos
+             BufferedWriter writer = new BufferedWriter(new FileWriter(filepath))) { // 00218123 Crea un BufferedWriter para escribir en el archivo
+
+            writer.write("Consulta SQL: " + query); // 00218123 Escribe la consulta SQL en el archivo
+            writer.newLine(); // 00218123 Escribe una nueva línea en el archivo
+            writer.newLine(); // 00218123 Escribe una nueva línea en el archivo
+
+            Statement st = conn.createStatement(); // 00218123 Crea una declaración SQL
+            ResultSet rs = st.executeQuery(query); // 00218123 Ejecuta la consulta SQL y obtiene el resultado
+
+            StringBuilder reporteBuilder = new StringBuilder(); // 00218123 StringBuilder para construir el contenido del reporte
+            StringBuilder tarjetasCredito = new StringBuilder(); // 00218123 StringBuilder para las tarjetas de crédito
+            StringBuilder tarjetasDebito = new StringBuilder(); // 00218123 StringBuilder para las tarjetas de débito
+
+            while (rs.next()) { // 00218123 Itera sobre los resultados de la consulta
+                String numeroTarjeta = rs.getString("numero_tarjeta"); // 00218123 Obtiene el número de la tarjeta
+                String tipo = rs.getString("tipo"); // 00218123 Obtiene el tipo de la tarjeta
+
+                if (tipo.equalsIgnoreCase("Credito")) { // 00218123 Verifica si el tipo de la tarjeta es "Credito"
+                    String censurada = "XXXX XXXX XXXX " + numeroTarjeta.substring(numeroTarjeta.length() - 4); // Censura el número de la tarjeta
+                    tarjetasCredito.append(censurada).append("\n"); // 00218123 Añade la tarjeta censurada al StringBuilder de tarjetas de crédito
+                } else {
+                    tarjetasDebito.append(numeroTarjeta).append("\n"); // 00218123 Añade la tarjeta al StringBuilder de tarjetas de débito
+                }
+            }
+
+            writer.write("Tarjetas de crédito:\n"); // 00218123 Escribe el título para las tarjetas de crédito en el archivo
+            if (tarjetasCredito.length() > 0) {
+                writer.write(tarjetasCredito.toString()); //  00218123Escribe las tarjetas de crédito en el archivo
+                reporteBuilder.append("Tarjetas de crédito:\n").append(tarjetasCredito.toString()); // 00218123 Añade las tarjetas de crédito al StringBuilder del reporte
+            } else {
+                writer.write("N/A\n"); // 00218123 Escribe "N/A" en el archivo si no hay tarjetas de crédito
+                reporteBuilder.append("Tarjetas de crédito:\nN/A\n"); // 00218123 Añade "N/A" al StringBuilder del reporte si no hay tarjetas de crédito
+            }
+
+            writer.write("\nTarjetas de Débito:\n"); // 00218123 Escribe el título para las tarjetas de débito en el archivo
+            if (tarjetasDebito.length() > 0) {
+                writer.write(tarjetasDebito.toString()); // 00218123 Escribe las tarjetas de débito en el archivo
+                reporteBuilder.append("\nTarjetas de Débito:\n").append(tarjetasDebito.toString()); // 00218123 Añade las tarjetas de débito al StringBuilder del reporte
+            } else {
+                writer.write("N/A\n"); // 00218123 Escribe "N/A" en el archivo si no hay tarjetas de débito
+                reporteBuilder.append("\nTarjetas de Débito:\nN/A\n"); // 00218123 Añade "N/A" al StringBuilder del reporte si no hay tarjetas de débito
+            }
+
+            writer.close(); // 00218123 Cierra el BufferedWriter
+            reporteTextArea.setText(reporteBuilder.toString()); // 00218123 Muestra el contenido del reporte en el área de texto
+
+        } catch (SQLException e) {
+            System.out.println("Fallo al conectar la base de datos"); // 00218123 Imprime un mensaje de error si la conexión falla
+            e.printStackTrace(); // 00218123 Imprime la traza del error
+        } catch (IOException e) {
+            System.out.println("Error al escribir en el archivo"); // 00218123 Imprime un mensaje de error si la escritura en el archivo falla
+            e.printStackTrace(); // 00218123 Imprime la traza del error
+        }
+    }
 }
