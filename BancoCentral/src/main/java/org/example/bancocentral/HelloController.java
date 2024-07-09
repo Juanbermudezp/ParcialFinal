@@ -112,6 +112,7 @@ public class HelloController {
             montoField.clear(); // 00218123 Limpia el campo de texto del monto de la compra
             descripcionField.clear(); // 00218123 Limpia el campo de texto de la descripción de la compra
             idTarjetaForeField.clear(); // 00218123 Limpia el campo de texto del ID de la tarjeta relacionada
+
         });
     }
 }
