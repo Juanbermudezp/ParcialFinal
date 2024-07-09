@@ -166,6 +166,59 @@ public class HelloController {
     }
 
     @FXML
+    public void cargarReporteA() { // 00029823 Metodo para cargar el reporte A
+        reporteTextArea.clear(); // 00029823 Limpia el área de texto del reporte
+        File directory = new File("Reportes"); // 00029823 Crea un objeto File para la carpeta "Reportes"
+        if (!directory.exists()) { // 00029823 Verifica si la carpeta no existe
+            directory.mkdir(); // 00029823 Crea la carpeta "Reportes"
+        }
+
+        String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm").format(new Date()); // 00029823 Obtiene la fecha y hora actual en el formato deseado
+        String filepath = "Reportes/ReporteA_" + timestamp + ".txt"; // 00029823 Genera el nombre del archivo del reporte
+        String query = "SELECT c.id AS compra_id, c.fecha, c.monto, c.descripcion " +
+                "FROM Compra c " +
+                "JOIN Tarjeta t ON c.tarjeta_id = t.id " +
+                "JOIN Cliente cl ON t.cliente_id = cl.id " +
+                "WHERE cl.id = 1 AND c.fecha BETWEEN '2024-01-01' AND '2024-12-31'"; // 00029823 Consulta SQL para obtener las compras del cliente 1 en el año 2024
+
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BancoCentral", "root", "#Juanbermudezp"); // 00029823 Conexión a la base de datos
+             BufferedWriter writer = new BufferedWriter(new FileWriter(filepath))) { // 00029823 Crea un BufferedWriter para escribir en el archivo
+
+            writer.write("Consulta SQL: " + query); // 00029823 Escribe la consulta SQL en el archivo
+            writer.newLine(); // 00029823 Escribe una nueva línea en el archivo
+            writer.newLine(); // 00029823 Escribe una nueva línea en el archivo
+
+            Statement st = conn.createStatement(); // 00029823 Crea una declaración SQL
+            ResultSet rs = st.executeQuery(query); // 00029823 Ejecuta la consulta SQL y obtiene el resultado
+
+            StringBuilder reporteBuilder = new StringBuilder(); // 00029823 StringBuilder para construir el contenido del reporte
+
+            while (rs.next()) { // 00029823 Itera sobre los resultados de la consulta
+                int compraId = rs.getInt("compra_id"); // 00029823 Obtiene el ID de la compra
+                Date fecha = rs.getDate("fecha"); // 00029823 Obtiene la fecha de la compra
+                double monto = rs.getDouble("monto"); // 00029823 Obtiene el monto de la compra
+                String descripcion = rs.getString("descripcion"); // 00029823 Obtiene la descripción de la compra
+
+                String linea = String.format("ID Compra: %d, Fecha: %s, Monto: %.2f, Descripción: %s",
+                        compraId, fecha, monto, descripcion); // 00029823 Formatea los datos de la compra en una línea
+                writer.write(linea); // 00029823 Escribe la línea en el archivo
+                writer.newLine(); // 00029823 Escribe una nueva línea en el archivo
+                reporteBuilder.append(linea).append("\n"); //00029823 Añade la línea al StringBuilder
+            }
+
+            writer.close(); // 00029823 Cierra el BufferedWriter
+            reporteTextArea.setText(reporteBuilder.toString()); // 00029823 Muestra el contenido del reporte en el área de texto
+
+        } catch (SQLException e) {
+            System.out.println("Fallo al conectar la base de datos"); // 00029823 Imprime un mensaje de error si la conexión falla
+            e.printStackTrace(); // 00029823 Imprime la traza del error
+        } catch (IOException e) {
+            System.out.println("Error al escribir en el archivo"); // 00029823 Imprime un mensaje de error si la escritura en el archivo falla
+            e.printStackTrace(); // 00029823 Imprime la traza del error
+        }
+    }
+
+    @FXML
     public void cargarReporteB() { // 00363523 Metodo para cargar el Reporte B
         reporteTextArea.clear(); // 00363523 Limpia el área de texto del reporte
         File directory = new File("Reportes"); // 00363523 Crea un objeto File para la carpeta "Reportes"
