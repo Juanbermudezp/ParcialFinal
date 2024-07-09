@@ -64,8 +64,6 @@ public class HelloController {
     private TextArea reporteTextArea; // 00363823 Área de texto para mostrar los reportes
 
 
-
-
     @FXML
     public void initialize() {
         if (tipoField.getItems().isEmpty()) { // 00218123 Verifica si el ComboBox de tipo está vacío
@@ -118,14 +116,11 @@ public class HelloController {
             idTarjetaForeField.clear(); // 00218123 Limpia el campo de texto del ID de la tarjeta relacionada
 
         });
-  
-  
-  
-
-    private void InsertarTarjeta(int id, String numTarjeta, String fechaExpiracion, String tipo, String facilitador, int idCliente) { //Metodo para insertar una Tarjeta
+    }
+    private void InsertarTarjeta(int id, String numTarjeta, String fechaExpiracion, String tipo, String facilitador, int idCliente) { // 00363823 Metodo para insertar una Tarjeta
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BancoCentral", "root", "#Juanbermudezp"); // Conexión a la base de datos
-            PreparedStatement st = conn.prepareStatement("insert into Tarjeta values(?,?,?,?,?,?)"); // Prepara la declaración SQL para insertar una tarjeta
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BancoCentral", "root", "#Juanbermudezp"); // 00363823 Conexión a la base de datos
+            PreparedStatement st = conn.prepareStatement("insert into Tarjeta values(?,?,?,?,?,?)"); // 00363823 Prepara la declaración SQL para insertar una tarjeta
 
             st.setInt(1, id); //  00363823 Establece el ID de la tarjeta en la declaración
             st.setString(2, numTarjeta); //  00363823 Establece el número de la tarjeta en la declaración
@@ -148,9 +143,32 @@ public class HelloController {
     }
 
 
-
     @FXML
-    public void cargarReporteB() { // 00363823 Metodo para cargar el Reporte B
+
+    private void InsertarCompra(int id, String fecha, double monto, String descripcion, int idTarjeta) { // 00218123 Metodo para insertar una compra
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BancoCentral", "root", "#Juanbermudezp"); // 00218123 Conexión a la base de datos
+            PreparedStatement st = conn.prepareStatement("insert into Compra values(?,?,?,?,?)"); // 00218123 Prepara la declaración SQL para insertar una compra
+
+            st.setInt(1, id); // 00218123 Establece el ID de la compra en la declaración
+            st.setString(2, fecha); // 00218123 Establece la fecha de la compra en la declaración
+            st.setDouble(3, monto); // 00218123 Establece el monto de la compra en la declaración
+            st.setString(4, descripcion); // 00218123 Establece la descripción de la compra en la declaración
+            st.setInt(5, idTarjeta); // 00218123 Establece el ID de la tarjeta relacionada en la declaración
+
+            try {
+                int results = st.executeUpdate(); // 00218123 Ejecuta la declaración SQL y obtiene el número de filas afectadas
+                System.out.println(results + " fila(s) afectada(s)"); // 00218123 Imprime el número de filas afectadas
+            } catch (SQLException e) {
+                System.out.println("Error al insertar datos"); // 00218123 Imprime un mensaje de error si la inserción falla
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al conectar la base de datos"); // 00218123 Imprime un mensaje de error si la conexión falla
+        }
+    }
+  
+  public void cargarReporteB() { // 00363823 Metodo para cargar el Reporte B
         reporteTextArea.clear(); // 00363823 Limpia el área de texto del reporte
         File directory = new File("Reportes"); // 00363823 Crea un objeto File para la carpeta "Reportes"
         if (!directory.exists()) { // 00363823 Verifica si la carpeta no existe
@@ -194,6 +212,4 @@ public class HelloController {
         } catch (IOException e) {
             System.out.println("Error al escribir en el archivo"); //  00363823 Imprime un mensaje de error si la escritura en el archivo falla
             e.printStackTrace(); //  00363823 Imprime la traza del error
-        }
-    }
 }
