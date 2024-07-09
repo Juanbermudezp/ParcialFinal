@@ -117,6 +117,29 @@ public class HelloController {
 
         });
     }
+
+    private void InsertarCliente(int id, String nombre, String direccion, String telefono) { //Metodo para insertar un cliente
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BancoCentral", "root", "#Juanbermudezp"); // Conexión a la base de datos
+            PreparedStatement st = conn.prepareStatement("insert into Cliente values(?,?,?,?)"); // Prepara la declaración SQL para insertar un cliente
+
+            st.setInt(1, id); // Establece el ID del cliente en la declaración
+            st.setString(2, nombre); // Establece el nombre del cliente en la declaración
+            st.setString(3, direccion); // Establece la dirección del cliente en la declaración
+            st.setString(4, telefono); // Establece el teléfono del cliente en la declaración
+
+            try {
+                int results = st.executeUpdate(); // Ejecuta la declaración SQL y obtiene el número de filas afectadas
+                System.out.println(results + " fila(s) afectada(s)"); // Imprime el número de filas afectadas
+            } catch (SQLException e) {
+                System.out.println("Error al insertar datos"); // Imprime un mensaje de error si la inserción falla
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al conectar la base de datos"); // Imprime un mensaje de error si la conexión falla
+        }
+    }
+
     private void InsertarTarjeta(int id, String numTarjeta, String fechaExpiracion, String tipo, String facilitador, int idCliente) { // 00363823 Metodo para insertar una Tarjeta
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BancoCentral", "root", "#Juanbermudezp"); // 00363823 Conexión a la base de datos
@@ -334,6 +357,65 @@ public class HelloController {
         } catch (IOException e) {
             System.out.println("Error al escribir en el archivo"); // 00218123 Imprime un mensaje de error si la escritura en el archivo falla
             e.printStackTrace(); // 00218123 Imprime la traza del error
+        }
+    }
+
+    @FXML
+    public void cargarReporteD() { // 00029823 Metodo para cargaqr el reporte D
+        reporteTextArea.clear(); // 00029823 Limpia el área de texto del reporte
+        File directory = new File("Reportes"); // 00029823 Crea un objeto File para la carpeta "Reportes"
+        if (!directory.exists()) { // 00029823 Verifica si la carpeta no existe
+            directory.mkdir(); // 00029823 Crea la carpeta "Reportes"
+        }
+
+        String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm").format(new Date()); // 00029823 Obtiene la fecha y hora actual en el formato deseado
+        String filepath = "Reportes/ReporteD_" + timestamp + ".txt"; // 00029823 Genera el nombre del archivo del reporte
+        String facilitador = "Visa"; // 00029823 Define el facilitador para la consulta
+        String query = "SELECT cl.id AS cliente_id, cl.nombre, COUNT(c.id) AS cantidad_compras, SUM(c.monto) AS total_gastado " +
+                "FROM Cliente cl " +
+                "JOIN Tarjeta t ON cl.id = t.cliente_id " +
+                "JOIN Compra c ON t.id = c.tarjeta_id " +
+                "WHERE t.facilitador = ? " +
+                "GROUP BY cl.id, cl.nombre"; // 00029823 Consulta SQL para obtener las compras y total gastado por cliente filtrado por facilitador
+
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BancoCentral", "root", "#Juanbermudezp"); // 00029823 Conexión a la base de datos
+             PreparedStatement pstmt = conn.prepareStatement(query); // 00029823 Prepara la declaración SQL
+             BufferedWriter writer = new BufferedWriter(new FileWriter(filepath))) { // 00029823 Crea un BufferedWriter para escribir en el archivo
+
+            pstmt.setString(1, facilitador); // 00029823 Establece el parámetro del facilitador en la declaración
+
+            writer.write("Consulta SQL: " + query); // 00029823 Escribe la consulta SQL en el archivo
+            writer.newLine(); // 00029823 Escribe una nueva línea en el archivo
+            writer.write("Parámetro facilitador: " + facilitador); // 00029823 Escribe el parámetro facilitador en el archivo
+            writer.newLine(); // 00029823 Escribe una nueva línea en el archivo
+            writer.newLine(); // 00029823 Escribe una nueva línea en el archivo
+
+            ResultSet rs = pstmt.executeQuery(); // 00029823 Ejecuta la consulta SQL y obtiene el resultado
+
+            StringBuilder reporteBuilder = new StringBuilder(); // 00029823 StringBuilder para construir el contenido del reporte
+
+            while (rs.next()) { // 00029823 Itera sobre los resultados de la consulta
+                int clienteId = rs.getInt("cliente_id"); // 00029823 Obtiene el ID del cliente
+                String nombre = rs.getString("nombre"); // 00029823 Obtiene el nombre del cliente
+                int cantidadCompras = rs.getInt("cantidad_compras"); // 00029823 Obtiene la cantidad de compras del cliente
+                double totalGastado = rs.getDouble("total_gastado"); // 00029823 Obtiene el total gastado por el cliente
+
+                String linea = String.format("Cliente ID: %d, Nombre: %s, Cantidad de Compras: %d, Total Gastado: %.2f",
+                        clienteId, nombre, cantidadCompras, totalGastado); // 00029823 Formatea los datos en una línea
+                writer.write(linea); // 00029823 Escribe la línea en el archivo
+                writer.newLine(); // 00029823 Escribe una nueva línea en el archivo
+                reporteBuilder.append(linea).append("\n"); // 00029823 Añade la línea al StringBuilder
+            }
+
+            writer.close(); // 00029823 Cierra el BufferedWriter
+            reporteTextArea.setText(reporteBuilder.toString()); // 00029823 Muestra el contenido del reporte en el área de texto
+
+        } catch (SQLException e) {
+            System.out.println("Fallo al conectar la base de datos"); // 00029823 Imprime un mensaje de error si la conexión falla
+            e.printStackTrace(); // Imprime la traza del error
+        } catch (IOException e) {
+            System.out.println("Error al escribir en el archivo"); // 00029823 Imprime un mensaje de error si la escritura en el archivo falla
+            e.printStackTrace(); // 00029823 Imprime la traza del error
         }
     }
 }
