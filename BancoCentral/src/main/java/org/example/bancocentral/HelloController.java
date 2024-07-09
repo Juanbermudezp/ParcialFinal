@@ -146,4 +146,54 @@ public class HelloController {
         }
 
     }
+
+
+
+    @FXML
+    public void cargarReporteB() { // 00363823 Metodo para cargar el Reporte B
+        reporteTextArea.clear(); // 00363823 Limpia el área de texto del reporte
+        File directory = new File("Reportes"); // 00363823 Crea un objeto File para la carpeta "Reportes"
+        if (!directory.exists()) { // 00363823 Verifica si la carpeta no existe
+            directory.mkdir(); // 00363823 Crea la carpeta "Reportes"
+        }
+
+        String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm").format(new Date()); // 00363823 Obtiene la fecha y hora actual en el formato deseado
+        String filepath = "Reportes/ReporteB_" + timestamp + ".txt"; //00363823  Genera el nombre del archivo del reporte
+        String query = "SELECT SUM(c.monto) AS total_gastado " +
+                "FROM Compra c " +
+                "JOIN Tarjeta t ON c.tarjeta_id = t.id " +
+                "JOIN Cliente cl ON t.cliente_id = cl.id " +
+                "WHERE cl.id = 1 AND MONTH(c.fecha) = 01 AND YEAR(c.fecha) = 2024"; // 00363823 Consulta SQL para obtener el total gastado por el cliente 1 en enero de 2024
+
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BancoCentral", "root", "#Juanbermudezp"); // 00363823 Conexión a la base de datos
+             BufferedWriter writer = new BufferedWriter(new FileWriter(filepath))) { // 00363823 Crea un BufferedWriter para escribir en el archivo
+
+            writer.write("Consulta SQL: " + query); // 00363823 Escribe la consulta SQL en el archivo
+            writer.newLine(); // 00363823 Escribe una nueva línea en el archivo
+            writer.newLine(); //00363823  Escribe una nueva línea en el archivo
+
+            Statement st = conn.createStatement(); // 00363823 Crea una declaración SQL
+            ResultSet rs = st.executeQuery(query); // 00363823 Ejecuta la consulta SQL y obtiene el resultado
+
+            StringBuilder reporteBuilder = new StringBuilder(); //00363823  StringBuilder para construir el contenido del reporte
+
+            if (rs.next()) { // 00363823 Verifica si hay un resultado
+                double totalGastado = rs.getDouble("total_gastado"); //  00363823 Obtiene el total gastado
+                String linea = String.format("Total gastado por el cliente 1 en el mes 1/2024: %.2f", totalGastado); // Formatea los datos en una línea
+                writer.write(linea); //  00363823 Escribe la línea en el archivo
+                writer.newLine(); //  00363823 Escribe una nueva línea en el archivo
+                reporteBuilder.append(linea).append("\n"); // 00363823  Añade la línea al StringBuilder
+            }
+
+            writer.close(); // 00363823 Cierra el BufferedWriter
+            reporteTextArea.setText(reporteBuilder.toString()); //  00363823 Muestra el contenido del reporte en el área de texto
+
+        } catch (SQLException e) {
+            System.out.println("Fallo al conectar la base de datos"); //  00363823 Imprime un mensaje de error si la conexión falla
+            e.printStackTrace(); // 00363823  Imprime la traza del error
+        } catch (IOException e) {
+            System.out.println("Error al escribir en el archivo"); //  00363823 Imprime un mensaje de error si la escritura en el archivo falla
+            e.printStackTrace(); //  00363823 Imprime la traza del error
+        }
+    }
 }
