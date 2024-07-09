@@ -1,16 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.example.bancocentral.HelloController">
-  <padding>
-    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-  </padding>
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?xml version="1.0" encoding="UTF-8"?>
 
-  <Label fx:id="welcomeText"/>
-  <Button text="Hello!" onAction="#onHelloButtonClick"/>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="TOP_CENTER" spacing="10.0" style="-fx-background-color: skyblue;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.bancocentral.HelloController"> <!-- 00029823 Base de la interfaz grafica-->
+  <children>
+    <Label text="Registro de Clientes" /> <!-- 00029823 Etiqueta para el título del formulario de registro de clientes -->
+    <HBox spacing="10.0"> <!-- 00029823 Contenedor horizontal para los campos y botón de cliente -->
+      <children>
+        <Label text="Cliente" /> <!-- 00029823 Etiqueta para el formulario de cliente -->
+        <TextField fx:id="idClienteField" promptText="Id_Cliente" /> <!-- 00029823 Campo de texto para el ID del cliente -->
+        <TextField fx:id="nombreField" promptText="Nombre" /> <!-- 00029823 Campo de texto para el nombre del cliente -->
+        <TextField fx:id="direccionField" promptText="Direccion" /> <!-- 00029823 Campo de texto para la dirección del cliente -->
+        <TextField fx:id="telefonoField" promptText="Telefono" /> <!-- 00029823 Campo de texto para el teléfono del cliente -->
+        <Button fx:id="ButtonCliente" text="Añadir Cliente" /> <!-- 00029823 Botón para añadir un cliente -->
+      </children>
+    </HBox>
+    <HBox spacing="10.0"> <!-- 00029823 Contenedor horizontal para los campos y botón de tarjeta -->
+      <children>
+        <Label text="Tarjeta" /> <!-- 00029823 Etiqueta para el formulario de tarjeta -->
+        <TextField fx:id="idTarjetaField" promptText="Id_Tarjeta" /> <!-- 00029823 Campo de texto para el ID de la tarjeta -->
+        <TextField fx:id="numTarjetaField" promptText="Numero de Tarjeta" /> <!-- 00029823 Campo de texto para el número de la tarjeta -->
+        <TextField fx:id="fechaExpiracionField" promptText="Fecha Expiracion" /> <!-- 00029823 Campo de texto para la fecha de expiración de la tarjeta -->
+        <ComboBox fx:id="tipoField" promptText="Tipo"> <!-- 00029823 ComboBox para seleccionar el tipo de tarjeta -->
+          <items>
+            <FXCollections fx:factory="observableArrayList">
+              <String fx:value="Credito" /> <!-- 00029823 Opción "Credito" en el ComboBox -->
+              <String fx:value="Debito" /> <!-- 00029823 Opción "Debito" en el ComboBox -->
+            </FXCollections>
+          </items>
+        </ComboBox>
+        <ComboBox fx:id="facilitadorField" promptText="Facilitador"> <!-- 00029823 ComboBox para seleccionar el facilitador de la tarjeta -->
+          <items>
+            <FXCollections fx:factory="observableArrayList">
+              <String fx:value="Visa" /> <!-- 00029823 Opción "Visa" en el ComboBox -->
+              <String fx:value="MasterCard" /> <!-- 00029823 Opción "MasterCard" en el ComboBox -->
+              <String fx:value="American Express" /> <!-- 00029823 Opción "American Express" en el ComboBox -->
+            </FXCollections>
+          </items>
+        </ComboBox>
+        <TextField fx:id="idClienteForeField" promptText="id_Cliente" /> <!-- 00029823 Campo de texto para el ID del cliente relacionado con la tarjeta -->
+        <Button fx:id="ButtonTarjeta" text="Añadir Tarjeta" /> <!-- 00029823 Botón para añadir una tarjeta -->
+      </children>
+    </HBox>
+    <HBox spacing="10"> <!-- 00029823 Contenedor horizontal para los campos y botón de compra -->
+      <children>
+        <Label text="Compra" /> <!-- 00029823 Etiqueta para el formulario de compra -->
+        <TextField fx:id="idCompraField" promptText="Id_Compra" /> <!-- 00029823 Campo de texto para el ID de la compra -->
+        <TextField fx:id="fechaField" promptText="Fecha de compra" /> <!-- 00029823 Campo de texto para la fecha de la compra -->
+        <TextField fx:id="montoField" promptText="Monto" /> <!-- 00029823 Campo de texto para el monto de la compra -->
+        <TextField fx:id="descripcionField" promptText="Descripcion" /> <!-- 00029823 Campo de texto para la descripción de la compra -->
+        <TextField fx:id="idTarjetaForeField" promptText="Id_Tarjeta" /> <!-- 00029823 Campo de texto para el ID de la tarjeta relacionada con la compra -->
+        <Button fx:id="ButtonCompra" text="Añadir Compra" /> <!-- 00029823 Botón para añadir una compra -->
+      </children>
+    </HBox>
+    <HBox alignment="CENTER" spacing="10"> <!-- 00029823 Contenedor horizontal para los botones de reportes -->
+      <children>
+        <Button fx:id="reporteA_Button" onAction="#cargarReporteA" text="Reporte A" /> <!-- 00029823 Botón para generar el reporte A -->
+        <Button fx:id="reporteB_Button" onAction="#cargarReporteB" text="Reporte B" /> <!-- 00029823 Botón para generar el reporte B -->
+        <Button fx:id="reporteC_Button" onAction="#cargarReporteC" text="Reporte C" /> <!-- 00029823 Botón para generar el reporte C -->
+        <Button fx:id="reporteD_Button" onAction="#cargarReporteD" text="Reporte D" /> <!-- 00029823 Botón para generar el reporte D -->
+      </children>
+    </HBox>
+    <TextArea fx:id="reporteTextArea" prefHeight="399.0" prefWidth="996.0" /> <!-- 00029823 Área de texto para mostrar los reportes generados -->
+  </children>
 </VBox>
