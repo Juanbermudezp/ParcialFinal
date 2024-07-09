@@ -62,6 +62,10 @@ public class HelloController {
     private Button reporteD_Button; // 00363823 Botón para generar el reporte D
     @FXML
     private TextArea reporteTextArea; // 00363823 Área de texto para mostrar los reportes
+
+
+
+
     @FXML
     public void initialize() {
         if (tipoField.getItems().isEmpty()) { // 00218123 Verifica si el ComboBox de tipo está vacío
@@ -114,5 +118,32 @@ public class HelloController {
             idTarjetaForeField.clear(); // 00218123 Limpia el campo de texto del ID de la tarjeta relacionada
 
         });
+  
+  
+  
+
+    private void InsertarTarjeta(int id, String numTarjeta, String fechaExpiracion, String tipo, String facilitador, int idCliente) { //Metodo para insertar una Tarjeta
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BancoCentral", "root", "#Juanbermudezp"); // Conexión a la base de datos
+            PreparedStatement st = conn.prepareStatement("insert into Tarjeta values(?,?,?,?,?,?)"); // Prepara la declaración SQL para insertar una tarjeta
+
+            st.setInt(1, id); //  00363823 Establece el ID de la tarjeta en la declaración
+            st.setString(2, numTarjeta); //  00363823 Establece el número de la tarjeta en la declaración
+            st.setString(3, fechaExpiracion); //  00363823 Establece la fecha de expiración de la tarjeta en la declaración
+            st.setString(4, tipo); //  00363823 Establece el tipo de la tarjeta en la declaración
+            st.setString(5, facilitador); //  00363823 Establece el facilitador de la tarjeta en la declaración
+            st.setInt(6, idCliente); //  00363823 Establece el ID del cliente relacionado en la declaración
+
+            try {
+                int results = st.executeUpdate(); //  00363823 Ejecuta la declaración SQL y obtiene el número de filas afectadas
+                System.out.println(results + " fila(s) afectada(s)"); // 00363823  Imprime el número de filas afectadas
+            } catch (SQLException e) {
+                System.out.println("Error al insertar datos"); //  00363823 Imprime un mensaje de error si la inserción falla
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al conectar la base de datos"); //  00363823 Imprime un mensaje de error si la conexión falla
+        }
+
     }
 }
