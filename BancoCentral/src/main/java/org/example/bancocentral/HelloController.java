@@ -118,25 +118,25 @@ public class HelloController {
         });
     }
 
-    private void InsertarCliente(int id, String nombre, String direccion, String telefono) { //Metodo para insertar un cliente
+    private void InsertarCliente(int id, String nombre, String direccion, String telefono) { // 00029823 Metodo para insertar un cliente
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BancoCentral", "root", "#Juanbermudezp"); // Conexión a la base de datos
-            PreparedStatement st = conn.prepareStatement("insert into Cliente values(?,?,?,?)"); // Prepara la declaración SQL para insertar un cliente
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BancoCentral", "root", "#Juanbermudezp"); // 00029823 Conexión a la base de datos
+            PreparedStatement st = conn.prepareStatement("insert into Cliente values(?,?,?,?)"); // 00029823 Prepara la declaración SQL para insertar un cliente
 
-            st.setInt(1, id); // Establece el ID del cliente en la declaración
-            st.setString(2, nombre); // Establece el nombre del cliente en la declaración
-            st.setString(3, direccion); // Establece la dirección del cliente en la declaración
-            st.setString(4, telefono); // Establece el teléfono del cliente en la declaración
+            st.setInt(1, id); // 00029823 Establece el ID del cliente en la declaración
+            st.setString(2, nombre); // 00029823 Establece el nombre del cliente en la declaración
+            st.setString(3, direccion); // 00029823 Establece la dirección del cliente en la declaración
+            st.setString(4, telefono); // 00029823 Establece el teléfono del cliente en la declaración
 
             try {
-                int results = st.executeUpdate(); // Ejecuta la declaración SQL y obtiene el número de filas afectadas
-                System.out.println(results + " fila(s) afectada(s)"); // Imprime el número de filas afectadas
+                int results = st.executeUpdate(); // 00029823 Ejecuta la declaración SQL y obtiene el número de filas afectadas
+                System.out.println(results + " fila(s) afectada(s)"); // 00029823 Imprime el número de filas afectadas
             } catch (SQLException e) {
-                System.out.println("Error al insertar datos"); // Imprime un mensaje de error si la inserción falla
+                System.out.println("Error al insertar datos"); // 00029823 Imprime un mensaje de error si la inserción falla
             }
 
         } catch (SQLException e) {
-            System.out.println("Error al conectar la base de datos"); // Imprime un mensaje de error si la conexión falla
+            System.out.println("Error al conectar la base de datos"); // 00029823 Imprime un mensaje de error si la conexión falla
         }
     }
 
