@@ -1,0 +1,7 @@
+Consulta SQL: SELECT t.numero_tarjeta, t.tipo FROM Tarjeta t JOIN Cliente cl ON t.cliente_id = cl.id WHERE cl.id = 1
+
+Tarjetas de crédito:
+XXXX XXXX XXXX 6789
+
+Tarjetas de Débito:
+N/A

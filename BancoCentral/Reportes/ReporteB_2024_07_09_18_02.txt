@@ -1,0 +1,3 @@
+Consulta SQL: SELECT SUM(c.monto) AS total_gastado FROM Compra c JOIN Tarjeta t ON c.tarjeta_id = t.id JOIN Cliente cl ON t.cliente_id = cl.id WHERE cl.id = 1 AND MONTH(c.fecha) = 01 AND YEAR(c.fecha) = 2024
+
+Total gastado por el cliente 1 en el mes 1/2024: 850.00

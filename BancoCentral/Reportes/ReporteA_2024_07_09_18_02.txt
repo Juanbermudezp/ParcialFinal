@@ -1,0 +1,6 @@
+Consulta SQL: SELECT c.id AS compra_id, c.fecha, c.monto, c.descripcion FROM Compra c JOIN Tarjeta t ON c.tarjeta_id = t.id JOIN Cliente cl ON t.cliente_id = cl.id WHERE cl.id = 1 AND c.fecha BETWEEN '2024-01-01' AND '2024-12-31'
+
+ID Compra: 1, Fecha: 2024-01-01, Monto: 200.00, Descripción: Telefono
+ID Compra: 2, Fecha: 2024-01-11, Monto: 500.00, Descripción: Computadora
+ID Compra: 3, Fecha: 2024-01-30, Monto: 150.00, Descripción: Tablet
+ID Compra: 4, Fecha: 2024-03-11, Monto: 200.00, Descripción: Telefono
