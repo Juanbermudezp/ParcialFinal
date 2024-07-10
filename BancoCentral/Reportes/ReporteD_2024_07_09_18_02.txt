@@ -1,0 +1,4 @@
+Consulta SQL: SELECT cl.id AS cliente_id, cl.nombre, COUNT(c.id) AS cantidad_compras, SUM(c.monto) AS total_gastado FROM Cliente cl JOIN Tarjeta t ON cl.id = t.cliente_id JOIN Compra c ON t.id = c.tarjeta_id WHERE t.facilitador = ? GROUP BY cl.id, cl.nombre
+Parámetro facilitador: Visa
+
+Cliente ID: 1, Nombre: Juan, Cantidad de Compras: 4, Total Gastado: 1050.00
