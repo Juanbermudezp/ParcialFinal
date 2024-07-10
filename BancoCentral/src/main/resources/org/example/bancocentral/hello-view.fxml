@@ -2,14 +2,9 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
 
 <?import java.lang.String?>
-<?import javafx.collections.FXCollections?>
-<?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
 <VBox alignment="TOP_CENTER" spacing="10.0" style="-fx-background-color: skyblue;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.bancocentral.HelloController"> <!-- 00029823 Base de la interfaz grafica-->
   <children>
     <Label text="Registro de Clientes" /> <!-- 00029823 Etiqueta para el título del formulario de registro de clientes -->
